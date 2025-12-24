@@ -223,7 +223,6 @@ MIT License
 
 ## 执行结果
 ```angular2html
-D:\jdk\jdk-11\bin\java.exe "-javaagent:D:\JetBrains\IntelliJ IDEA 2025.1.4.1\lib\idea_rt.jar=31569" -Dfile.encoding=UTF-8 -classpath D:\workSpace\QQQ.US\target\classes;D:\apache-maven-3.9.9-bin\apache-maven-3.9.9\rep\org\apache\poi\poi\5.2.5\poi-5.2.5.jar;D:\apache-maven-3.9.9-bin\apache-maven-3.9.9\rep\commons-codec\commons-codec\1.16.0\commons-codec-1.16.0.jar;D:\apache-maven-3.9.9-bin\apache-maven-3.9.9\rep\org\apache\commons\commons-collections4\4.4\commons-collections4-4.4.jar;D:\apache-maven-3.9.9-bin\apache-maven-3.9.9\rep\org\apache\commons\commons-math3\3.6.1\commons-math3-3.6.1.jar;D:\apache-maven-3.9.9-bin\apache-maven-3.9.9\rep\commons-io\commons-io\2.15.0\commons-io-2.15.0.jar;D:\apache-maven-3.9.9-bin\apache-maven-3.9.9\rep\com\zaxxer\SparseBitSet\1.3\SparseBitSet-1.3.jar;D:\apache-maven-3.9.9-bin\apache-maven-3.9.9\rep\org\apache\poi\poi-ooxml\5.2.5\poi-ooxml-5.2.5.jar;D:\apache-maven-3.9.9-bin\apache-maven-3.9.9\rep\org\apache\poi\poi-ooxml-lite\5.2.5\poi-ooxml-lite-5.2.5.jar;D:\apache-maven-3.9.9-bin\apache-maven-3.9.9\rep\org\apache\xmlbeans\xmlbeans\5.2.0\xmlbeans-5.2.0.jar;D:\apache-maven-3.9.9-bin\apache-maven-3.9.9\rep\org\apache\commons\commons-compress\1.25.0\commons-compress-1.25.0.jar;D:\apache-maven-3.9.9-bin\apache-maven-3.9.9\rep\com\github\virtuald\curvesapi\1.08\curvesapi-1.08.jar;D:\apache-maven-3.9.9-bin\apache-maven-3.9.9\rep\org\slf4j\slf4j-api\2.0.9\slf4j-api-2.0.9.jar;D:\apache-maven-3.9.9-bin\apache-maven-3.9.9\rep\ch\qos\logback\logback-classic\1.4.14\logback-classic-1.4.14.jar;D:\apache-maven-3.9.9-bin\apache-maven-3.9.9\rep\ch\qos\logback\logback-core\1.4.14\logback-core-1.4.14.jar;D:\apache-maven-3.9.9-bin\apache-maven-3.9.9\rep\org\apache\logging\log4j\log4j-to-slf4j\2.22.0\log4j-to-slf4j-2.22.0.jar;D:\apache-maven-3.9.9-bin\apache-maven-3.9.9\rep\org\apache\logging\log4j\log4j-api\2.22.0\log4j-api-2.22.0.jar com.quant.Main
 
 ╔══════════════════════════════════════════════════╗
 ║        QQQ.US 量化分析系统 v1.2.0               ║
@@ -604,9 +603,7 @@ VIX状态切换                       435.55%      -24.49%         0.67
    • 推荐使用策略组合或VIX状态切换来平衡风险收益
 
 
-程序执行完成！
 
-进程已结束，退出代码为 0
 
 ```
 
