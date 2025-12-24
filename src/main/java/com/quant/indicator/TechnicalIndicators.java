@@ -316,6 +316,62 @@ public class TechnicalIndicators {
     }
     
     /**
+     * 计算历史波动率 (Historical Volatility)
+     * 用于波动率目标策略
+     * 
+     * @param period 周期（默认20天）
+     * @return 当前对象（链式调用）
+     */
+    public TechnicalIndicators calculateHistoricalVolatility(int period) {
+        String indicatorName = "HV" + period;
+        
+        // 先确保日收益率已计算
+        calculateReturns();
+        
+        // 年化因子
+        double annualizationFactor = Math.sqrt(252);
+        
+        for (int i = period; i < dataList.size(); i++) {
+            // 计算过去 period 天的收益率标准差
+            double sum = 0;
+            int count = 0;
+            
+            for (int j = i - period; j < i; j++) {
+                sum += dataList.get(j).getDailyReturn();
+                count++;
+            }
+            
+            double mean = count > 0 ? sum / count : 0;
+            
+            double sumSquares = 0;
+            for (int j = i - period; j < i; j++) {
+                double diff = dataList.get(j).getDailyReturn() - mean;
+                sumSquares += diff * diff;
+            }
+            
+            // 日波动率
+            double dailyVol = count > 1 ? Math.sqrt(sumSquares / (count - 1)) : 0;
+            
+            // 年化波动率
+            double annualizedVol = dailyVol * annualizationFactor;
+            
+            dataList.get(i).setIndicator(indicatorName, annualizedVol);
+        }
+        
+        logger.debug("计算完成: {} (历史波动率)", indicatorName);
+        return this;
+    }
+    
+    /**
+     * 计算历史波动率（使用默认20天周期）
+     * 
+     * @return 当前对象（链式调用）
+     */
+    public TechnicalIndicators calculateHistoricalVolatility() {
+        return calculateHistoricalVolatility(20);
+    }
+    
+    /**
      * 计算所有基础指标
      * 
      * @return 当前对象（链式调用）
@@ -325,12 +381,15 @@ public class TechnicalIndicators {
         calculateMA(10);
         calculateMA(20);
         calculateMA(60);
+        calculateMA(50);   // 趋势追踪策略使用
+        calculateMA(200);  // 趋势追踪策略使用
         calculateEMA(12);
         calculateEMA(26);
         calculateMACD();
         calculateRSI();
         calculateBollingerBands();
         calculateReturns();
+        calculateHistoricalVolatility(20);  // 波动率目标策略使用
         
         logger.info("✓ 所有基础指标计算完成");
         return this;

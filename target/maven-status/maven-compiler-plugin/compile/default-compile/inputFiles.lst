@@ -3,6 +3,8 @@ D:\workSpace\QQQ.US\src\main\java\com\quant\indicator\TechnicalIndicators.java
 D:\workSpace\QQQ.US\src\main\java\com\quant\model\StockData.java
 D:\workSpace\QQQ.US\src\main\java\com\quant\strategy\MACrossStrategy.java
 D:\workSpace\QQQ.US\src\main\java\com\quant\strategy\RSIStrategy.java
+D:\workSpace\QQQ.US\src\main\java\com\quant\strategy\TrendFollowingStrategy.java
+D:\workSpace\QQQ.US\src\main\java\com\quant\strategy\VolatilityTargetStrategy.java
 D:\workSpace\QQQ.US\src\main\java\com\quant\loader\ExcelDataLoader.java
 D:\workSpace\QQQ.US\src\main\java\com\quant\Main.java
 D:\workSpace\QQQ.US\src\main\java\com\quant\strategy\DualMAStrategy.java
