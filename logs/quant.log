@@ -1202,3 +1202,72 @@
 2025-12-24 15:48:53.705 [main] INFO  com.quant.strategy.CombinedStrategy -   æœŸæœ«ç»„åˆä»·å€¼: 726899.77
 2025-12-24 15:48:53.705 [main] INFO  com.quant.strategy.CombinedStrategy -   ç´¯è®¡æ”¶ç›Šç‡: 626.90%
 2025-12-24 15:48:53.705 [main] INFO  com.quant.strategy.CombinedStrategy -   è°ƒä»“æ¬¡æ•°: 81
+2025-12-24 16:13:52.178 [com.quant.Main.main()] INFO  com.quant.loader.ExcelDataLoader - ? ³É¹¦¼ÓÔØÊı¾İ: 3677 Ìõ¼ÇÂ¼
+2025-12-24 16:13:52.183 [com.quant.Main.main()] INFO  com.quant.loader.ExcelDataLoader -   ¹ÉÆ±´úÂë: QQQ.NB
+2025-12-24 16:13:52.183 [com.quant.Main.main()] INFO  com.quant.loader.ExcelDataLoader -   ÈÕÆÚ·¶Î§: 2011-01-03 ~ 2025-08-15
+2025-12-24 16:13:52.269 [com.quant.Main.main()] INFO  com.quant.strategy.MACrossStrategy - ²ßÂÔ [MA½»²æ²ßÂÔ] ĞÅºÅÉú³ÉÍê³É (¶ÌÆÚMA=5, ³¤ÆÚMA=20)
+2025-12-24 16:13:52.269 [com.quant.Main.main()] INFO  com.quant.strategy.MACrossStrategy - ²ßÂÔ [MA½»²æ²ßÂÔ] »Ø²âÍê³É
+2025-12-24 16:13:52.270 [com.quant.Main.main()] INFO  com.quant.strategy.MACrossStrategy -   ÆÚÄ©×éºÏ¼ÛÖµ: 348824.18
+2025-12-24 16:13:52.270 [com.quant.Main.main()] INFO  com.quant.strategy.MACrossStrategy -   ÀÛ¼ÆÊÕÒæÂÊ: 248.82%
+2025-12-24 16:13:52.299 [com.quant.Main.main()] INFO  com.quant.strategy.DualMAStrategy - ²ßÂÔ [Ë«¾ùÏßÇ÷ÊÆ²ßÂÔ] ĞÅºÅÉú³ÉÍê³É (¶ÌÆÚMA=5, ³¤ÆÚMA=20)
+2025-12-24 16:13:52.300 [com.quant.Main.main()] INFO  com.quant.strategy.DualMAStrategy - ²ßÂÔ [Ë«¾ùÏßÇ÷ÊÆ²ßÂÔ] »Ø²âÍê³É
+2025-12-24 16:13:52.300 [com.quant.Main.main()] INFO  com.quant.strategy.DualMAStrategy -   ÆÚÄ©×éºÏ¼ÛÖµ: 122374.43
+2025-12-24 16:13:52.301 [com.quant.Main.main()] INFO  com.quant.strategy.DualMAStrategy -   ÀÛ¼ÆÊÕÒæÂÊ: 22.37%
+2025-12-24 16:13:52.307 [com.quant.Main.main()] INFO  com.quant.strategy.RSIStrategy - ²ßÂÔ [RSI²ßÂÔ] ĞÅºÅÉú³ÉÍê³É (RSI14, ³¬Âô=30.0, ³¬Âò=70.0)
+2025-12-24 16:13:52.308 [com.quant.Main.main()] INFO  com.quant.strategy.RSIStrategy - ²ßÂÔ [RSI²ßÂÔ] »Ø²âÍê³É
+2025-12-24 16:13:52.308 [com.quant.Main.main()] INFO  com.quant.strategy.RSIStrategy -   ÆÚÄ©×éºÏ¼ÛÖµ: 268864.24
+2025-12-24 16:13:52.308 [com.quant.Main.main()] INFO  com.quant.strategy.RSIStrategy -   ÀÛ¼ÆÊÕÒæÂÊ: 168.86%
+2025-12-24 16:13:52.317 [com.quant.Main.main()] INFO  c.q.strategy.TrendFollowingStrategy - ²ßÂÔ [Ç÷ÊÆ×·×Ù+ÏÖ½ğ¹ÜÀí²ßÂÔ] ĞÅºÅÉú³ÉÍê³É (¶ÌÆÚMA=50, ³¤ÆÚMA=200, »¬µã=0.05%)
+2025-12-24 16:13:52.317 [com.quant.Main.main()] INFO  c.q.strategy.TrendFollowingStrategy - ²ßÂÔ [Ç÷ÊÆ×·×Ù+ÏÖ½ğ¹ÜÀí²ßÂÔ] »Ø²âÍê³É
+2025-12-24 16:13:52.318 [com.quant.Main.main()] INFO  c.q.strategy.TrendFollowingStrategy -   ÆÚÄ©×éºÏ¼ÛÖµ: 642155.64
+2025-12-24 16:13:52.318 [com.quant.Main.main()] INFO  c.q.strategy.TrendFollowingStrategy -   ÀÛ¼ÆÊÕÒæÂÊ: 542.16%
+2025-12-24 16:13:52.362 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy - ²ßÂÔ [²¨¶¯ÂÊÄ¿±ê²ßÂÔ] ĞÅºÅÉú³ÉÍê³É (²¨¶¯ÂÊÖÜÆÚ=20, Ä¿±ê²¨¶¯ÂÊ=15.0%, ×î´ó²ÖÎ»=1.0)
+2025-12-24 16:13:52.366 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy - ²ßÂÔ [²¨¶¯ÂÊÄ¿±ê²ßÂÔ] »Ø²âÍê³É
+2025-12-24 16:13:52.367 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy -   ÆÚÄ©×éºÏ¼ÛÖµ: 636081.77
+2025-12-24 16:13:52.367 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy -   ÀÛ¼ÆÊÕÒæÂÊ: 536.08%
+2025-12-24 16:13:52.367 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy -   µ÷²Ö´ÎÊı: 92
+2025-12-24 16:13:52.393 [com.quant.Main.main()] INFO  c.q.strategy.TrendFollowingStrategy - ²ßÂÔ [Ç÷ÊÆ×·×Ù+ÏÖ½ğ¹ÜÀí²ßÂÔ] ĞÅºÅÉú³ÉÍê³É (¶ÌÆÚMA=50, ³¤ÆÚMA=200, »¬µã=0.05%)
+2025-12-24 16:13:52.395 [com.quant.Main.main()] INFO  c.q.strategy.TrendFollowingStrategy - ²ßÂÔ [Ç÷ÊÆ×·×Ù+ÏÖ½ğ¹ÜÀí²ßÂÔ] »Ø²âÍê³É
+2025-12-24 16:13:52.396 [com.quant.Main.main()] INFO  c.q.strategy.TrendFollowingStrategy -   ÆÚÄ©×éºÏ¼ÛÖµ: 642155.64
+2025-12-24 16:13:52.396 [com.quant.Main.main()] INFO  c.q.strategy.TrendFollowingStrategy -   ÀÛ¼ÆÊÕÒæÂÊ: 542.16%
+2025-12-24 16:13:52.422 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy - ²ßÂÔ [²¨¶¯ÂÊÄ¿±ê²ßÂÔ] ĞÅºÅÉú³ÉÍê³É (²¨¶¯ÂÊÖÜÆÚ=20, Ä¿±ê²¨¶¯ÂÊ=15.0%, ×î´ó²ÖÎ»=1.0)
+2025-12-24 16:13:52.424 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy - ²ßÂÔ [²¨¶¯ÂÊÄ¿±ê²ßÂÔ] »Ø²âÍê³É
+2025-12-24 16:13:52.424 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy -   ÆÚÄ©×éºÏ¼ÛÖµ: 636081.77
+2025-12-24 16:13:52.424 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy -   ÀÛ¼ÆÊÕÒæÂÊ: 536.08%
+2025-12-24 16:13:52.424 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy -   µ÷²Ö´ÎÊı: 92
+2025-12-24 16:13:52.430 [com.quant.Main.main()] INFO  c.quant.strategy.BuyAndHoldStrategy - ²ßÂÔ [ÂòÈë³ÖÓĞ²ßÂÔ] ĞÅºÅÉú³ÉÍê³É (ÂòÈë²¢³ÖÓĞ)
+2025-12-24 16:13:52.431 [com.quant.Main.main()] INFO  c.quant.strategy.BuyAndHoldStrategy - ²ßÂÔ [ÂòÈë³ÖÓĞ²ßÂÔ] »Ø²âÍê³É
+2025-12-24 16:13:52.432 [com.quant.Main.main()] INFO  c.quant.strategy.BuyAndHoldStrategy -   ÆÚÄ©×éºÏ¼ÛÖµ: 1043825.71
+2025-12-24 16:13:52.432 [com.quant.Main.main()] INFO  c.quant.strategy.BuyAndHoldStrategy -   ÀÛ¼ÆÊÕÒæÂÊ: 943.83%
+2025-12-24 16:13:52.439 [com.quant.Main.main()] INFO  com.quant.strategy.CombinedStrategy - ²ßÂÔ [²ßÂÔ×éºÏ] ĞÅºÅÉú³ÉÍê³É£¬°üº¬ 3 ¸ö×Ó²ßÂÔ
+2025-12-24 16:13:52.442 [com.quant.Main.main()] INFO  com.quant.strategy.CombinedStrategy - ²ßÂÔ [²ßÂÔ×éºÏ] »Ø²âÍê³É
+2025-12-24 16:13:52.442 [com.quant.Main.main()] INFO  com.quant.strategy.CombinedStrategy -   ÆÚÄ©×éºÏ¼ÛÖµ: 726899.77
+2025-12-24 16:13:52.442 [com.quant.Main.main()] INFO  com.quant.strategy.CombinedStrategy -   ÀÛ¼ÆÊÕÒæÂÊ: 626.90%
+2025-12-24 16:13:52.442 [com.quant.Main.main()] INFO  com.quant.strategy.CombinedStrategy -   µ÷²Ö´ÎÊı: 81
+2025-12-24 16:13:52.451 [com.quant.Main.main()] INFO  c.q.strategy.TrendFollowingStrategy - ²ßÂÔ [Ç÷ÊÆ×·×Ù+ÏÖ½ğ¹ÜÀí²ßÂÔ] ĞÅºÅÉú³ÉÍê³É (¶ÌÆÚMA=50, ³¤ÆÚMA=200, »¬µã=0.05%)
+2025-12-24 16:13:52.451 [com.quant.Main.main()] INFO  c.q.strategy.TrendFollowingStrategy - ²ßÂÔ [Ç÷ÊÆ×·×Ù+ÏÖ½ğ¹ÜÀí²ßÂÔ] »Ø²âÍê³É
+2025-12-24 16:13:52.452 [com.quant.Main.main()] INFO  c.q.strategy.TrendFollowingStrategy -   ÆÚÄ©×éºÏ¼ÛÖµ: 642155.64
+2025-12-24 16:13:52.452 [com.quant.Main.main()] INFO  c.q.strategy.TrendFollowingStrategy -   ÀÛ¼ÆÊÕÒæÂÊ: 542.16%
+2025-12-24 16:13:52.471 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy - ²ßÂÔ [²¨¶¯ÂÊÄ¿±ê²ßÂÔ] ĞÅºÅÉú³ÉÍê³É (²¨¶¯ÂÊÖÜÆÚ=20, Ä¿±ê²¨¶¯ÂÊ=15.0%, ×î´ó²ÖÎ»=1.0)
+2025-12-24 16:13:52.473 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy - ²ßÂÔ [²¨¶¯ÂÊÄ¿±ê²ßÂÔ] »Ø²âÍê³É
+2025-12-24 16:13:52.473 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy -   ÆÚÄ©×éºÏ¼ÛÖµ: 636081.77
+2025-12-24 16:13:52.473 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy -   ÀÛ¼ÆÊÕÒæÂÊ: 536.08%
+2025-12-24 16:13:52.473 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy -   µ÷²Ö´ÎÊı: 92
+2025-12-24 16:13:52.491 [com.quant.Main.main()] INFO  c.q.strategy.TrendFollowingStrategy - ²ßÂÔ [Ç÷ÊÆ×·×Ù+ÏÖ½ğ¹ÜÀí²ßÂÔ] ĞÅºÅÉú³ÉÍê³É (¶ÌÆÚMA=50, ³¤ÆÚMA=200, »¬µã=0.05%)
+2025-12-24 16:13:52.492 [com.quant.Main.main()] INFO  c.q.strategy.TrendFollowingStrategy - ²ßÂÔ [Ç÷ÊÆ×·×Ù+ÏÖ½ğ¹ÜÀí²ßÂÔ] »Ø²âÍê³É
+2025-12-24 16:13:52.492 [com.quant.Main.main()] INFO  c.q.strategy.TrendFollowingStrategy -   ÆÚÄ©×éºÏ¼ÛÖµ: 642155.64
+2025-12-24 16:13:52.492 [com.quant.Main.main()] INFO  c.q.strategy.TrendFollowingStrategy -   ÀÛ¼ÆÊÕÒæÂÊ: 542.16%
+2025-12-24 16:13:52.513 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy - ²ßÂÔ [²¨¶¯ÂÊÄ¿±ê²ßÂÔ] ĞÅºÅÉú³ÉÍê³É (²¨¶¯ÂÊÖÜÆÚ=20, Ä¿±ê²¨¶¯ÂÊ=15.0%, ×î´ó²ÖÎ»=1.0)
+2025-12-24 16:13:52.514 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy - ²ßÂÔ [²¨¶¯ÂÊÄ¿±ê²ßÂÔ] »Ø²âÍê³É
+2025-12-24 16:13:52.514 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy -   ÆÚÄ©×éºÏ¼ÛÖµ: 636081.77
+2025-12-24 16:13:52.514 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy -   ÀÛ¼ÆÊÕÒæÂÊ: 536.08%
+2025-12-24 16:13:52.514 [com.quant.Main.main()] INFO  c.q.s.VolatilityTargetStrategy -   µ÷²Ö´ÎÊı: 92
+2025-12-24 16:13:52.520 [com.quant.Main.main()] INFO  c.quant.strategy.BuyAndHoldStrategy - ²ßÂÔ [ÂòÈë³ÖÓĞ²ßÂÔ] ĞÅºÅÉú³ÉÍê³É (ÂòÈë²¢³ÖÓĞ)
+2025-12-24 16:13:52.521 [com.quant.Main.main()] INFO  c.quant.strategy.BuyAndHoldStrategy - ²ßÂÔ [ÂòÈë³ÖÓĞ²ßÂÔ] »Ø²âÍê³É
+2025-12-24 16:13:52.522 [com.quant.Main.main()] INFO  c.quant.strategy.BuyAndHoldStrategy -   ÆÚÄ©×éºÏ¼ÛÖµ: 1043825.71
+2025-12-24 16:13:52.522 [com.quant.Main.main()] INFO  c.quant.strategy.BuyAndHoldStrategy -   ÀÛ¼ÆÊÕÒæÂÊ: 943.83%
+2025-12-24 16:13:52.525 [com.quant.Main.main()] INFO  com.quant.strategy.CombinedStrategy - ²ßÂÔ [²ßÂÔ×éºÏ] ĞÅºÅÉú³ÉÍê³É£¬°üº¬ 3 ¸ö×Ó²ßÂÔ
+2025-12-24 16:13:52.526 [com.quant.Main.main()] INFO  com.quant.strategy.CombinedStrategy - ²ßÂÔ [²ßÂÔ×éºÏ] »Ø²âÍê³É
+2025-12-24 16:13:52.526 [com.quant.Main.main()] INFO  com.quant.strategy.CombinedStrategy -   ÆÚÄ©×éºÏ¼ÛÖµ: 726899.77
+2025-12-24 16:13:52.526 [com.quant.Main.main()] INFO  com.quant.strategy.CombinedStrategy -   ÀÛ¼ÆÊÕÒæÂÊ: 626.90%
+2025-12-24 16:13:52.526 [com.quant.Main.main()] INFO  com.quant.strategy.CombinedStrategy -   µ÷²Ö´ÎÊı: 81
