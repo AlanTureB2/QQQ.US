@@ -18,8 +18,7 @@ import java.util.List;
  * 包含策略：
  *   - 方案A：趋势追踪+现金管理策略 (TrendFollowingStrategy)
  *   - 方案B：波动率目标策略 (VolatilityTargetStrategy)
- *   - 方案C：策略组合 (CombinedStrategy)
- *   - 方案D：VIX状态切换策略 (VIXRegimeStrategy)
+ *   - 方案C：策略组合 (CombinedStrategy) ★推荐★
  */
 public class Main {
     
@@ -102,13 +101,9 @@ public class Main {
         // 目标波动率15%，最大仓位100%，最小仓位10%
         strategies.add(new VolatilityTargetStrategy(20, 0.15, 1.0, 0.1, 0.0005, 0.1));
         
-        // ★★ 高阶策略 ★★
+        // ★★ 推荐策略 ★★
         // 方案C：策略组合（40%趋势追踪 + 40%波动率目标 + 20%买入持有）
         strategies.add(CombinedStrategy.createDefaultCombination());
-        
-        // 方案D：VIX状态切换策略
-        // 根据波动率状态（低/中/高）切换不同策略
-        strategies.add(new VIXRegimeStrategy());
         
         // 执行每个策略
         for (Strategy strategy : strategies) {
@@ -167,17 +162,16 @@ public class Main {
         PerformanceStatistics volStats = new PerformanceStatistics(volData);
         volStats.printSummary();
         
-        // ========== 5. 高阶策略详细对比 ==========
-        System.out.println("\n【步骤5】高阶策略详细对比...\n");
-        
-        // 方案C：策略组合
+        // 方案C：策略组合 ★推荐★
         System.out.println("=" .repeat(60));
-        System.out.println("【方案C】策略组合 (40% 趋势追踪 + 40% 波动率目标 + 20% 买入持有)");
+        System.out.println("【方案C】策略组合 ★推荐★");
+        System.out.println("         (40% 趋势追踪 + 40% 波动率目标 + 20% 买入持有)");
         System.out.println("=" .repeat(60));
         System.out.println("设计理念：");
         System.out.println("  • 多策略组合降低单一策略风险");
         System.out.println("  • 不同策略相关性低，组合后可降低整体回撤");
         System.out.println("  • 收益介于各策略之间，但风险更低");
+        System.out.println("  • 简单有效，无需频繁调整");
         
         List<StockData> combinedData = copyDataList(dataList);
         CombinedStrategy combinedStrategy = CombinedStrategy.createDefaultCombination();
@@ -185,59 +179,15 @@ public class Main {
         PerformanceStatistics combinedStats = new PerformanceStatistics(combinedData);
         combinedStats.printSummary();
         
-        // 方案D：VIX状态切换策略
-        System.out.println("=" .repeat(60));
-        System.out.println("【方案D】VIX状态切换策略");
-        System.out.println("=" .repeat(60));
-        System.out.println("设计理念：");
-        System.out.println("  • 低波动 (<15%)：买入持有，满仓参与上涨");
-        System.out.println("  • 中波动 (15-25%)：趋势追踪，跟随趋势");
-        System.out.println("  • 高波动 (>25%)：波动率目标策略，动态降仓位");
-        System.out.println("  • 根据市场环境自动切换策略");
-        
-        List<StockData> vixData = copyDataList(dataList);
-        VIXRegimeStrategy vixStrategy = new VIXRegimeStrategy();
-        vixStrategy.execute(vixData);
-        PerformanceStatistics vixStats = new PerformanceStatistics(vixData);
-        vixStats.printSummary();
-        
-        // 显示VIX策略最近数据
-        System.out.println("【VIX状态切换策略 - 最近5条数据】");
-        System.out.println("-".repeat(90));
-        System.out.printf("%-12s %10s %12s %12s %12s\n", 
-                "日期", "收盘价", "模拟VIX", "市场状态", "仓位权重");
-        System.out.println("-".repeat(90));
-        
-        int vixStartIdx = Math.max(0, vixData.size() - 5);
-        for (int i = vixStartIdx; i < vixData.size(); i++) {
-            StockData data = vixData.get(i);
-            Double simVix = data.getIndicator("SIMULATED_VIX");
-            Double regime = data.getIndicator("REGIME");
-            Double weight = data.getIndicator("REGIME_WEIGHT");
-            
-            String regimeStr = "未知";
-            if (regime != null) {
-                int r = regime.intValue();
-                regimeStr = r == 0 ? "低波动" : (r == 1 ? "中波动" : "高波动");
-            }
-            
-            System.out.printf("%-12s %10.2f %11.2f%% %12s %11.2f%%\n",
-                    data.getDate(),
-                    data.getClose(),
-                    simVix != null ? simVix * 100 : 0,
-                    regimeStr,
-                    weight != null ? weight * 100 : 0);
-        }
-        
         // 基准对比（买入持有）
-        System.out.println("\n" + "=" .repeat(60));
+        System.out.println("=" .repeat(60));
         System.out.println("【基准】买入持有策略");
         System.out.println("=" .repeat(60));
         PerformanceStatistics stats = new PerformanceStatistics(dataList);
         System.out.printf("  基准收益率: %.2f%%\n", stats.getBenchmarkReturn());
         System.out.println();
         
-        // ========== 6. 策略对比总结 ==========
+        // ========== 5. 策略对比总结 ==========
         System.out.println("=" .repeat(60));
         System.out.println("【策略对比总结】");
         System.out.println("=" .repeat(60));
@@ -250,9 +200,7 @@ public class Main {
         System.out.printf("%-24s %11.2f%% %11.2f%% %12.2f\n", 
                 "波动率目标", volStats.getTotalReturn(), volStats.getMaxDrawdown(), volStats.getSharpeRatio());
         System.out.printf("%-24s %11.2f%% %11.2f%% %12.2f\n", 
-                "策略组合", combinedStats.getTotalReturn(), combinedStats.getMaxDrawdown(), combinedStats.getSharpeRatio());
-        System.out.printf("%-24s %11.2f%% %11.2f%% %12.2f\n", 
-                "VIX状态切换", vixStats.getTotalReturn(), vixStats.getMaxDrawdown(), vixStats.getSharpeRatio());
+                "★策略组合★", combinedStats.getTotalReturn(), combinedStats.getMaxDrawdown(), combinedStats.getSharpeRatio());
         System.out.println("-".repeat(60));
         System.out.println();
         
@@ -301,7 +249,7 @@ public class Main {
         }
         
         // 开发注意事项
-        System.out.println("=".repeat(60));
+        System.out.println("\n" + "=".repeat(60));
         System.out.println("【开发注意事项】");
         System.out.println("=".repeat(60));
         System.out.println("1. 幸存者偏差：2010年以来数据经历长期QE，过拟合是最大风险");
@@ -317,7 +265,7 @@ public class Main {
         System.out.println("4. 收益与风险的权衡：");
         System.out.println("   • 策略收益低于买入持有是正常的（风险控制的代价）");
         System.out.println("   • 关注夏普比率和最大回撤，而非单纯追求高收益");
-        System.out.println("   • 推荐使用策略组合或VIX状态切换来平衡风险收益");
+        System.out.println("   • 推荐使用策略组合来平衡风险收益");
         System.out.println();
         
         System.out.println("\n程序执行完成！");
@@ -395,4 +343,3 @@ public class Main {
         return dataList;
     }
 }
-
