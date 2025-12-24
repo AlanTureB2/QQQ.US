@@ -1,0 +1,24 @@
+
+2025-12-24 13:38:41.206 [main] INFO  com.quant.loader.ExcelDataLoader - ✓ 成功加载数据: 3677 条记录
+2025-12-24 13:38:41.209 [main] INFO  com.quant.loader.ExcelDataLoader -   股票代码: QQQ.NB
+2025-12-24 13:38:41.210 [main] INFO  com.quant.loader.ExcelDataLoader -   日期范围: 2011-01-03 ~ 2025-08-15
+2025-12-24 13:38:41.258 [main] INFO  com.quant.strategy.MACrossStrategy - 策略 [MA交叉策略] 信号生成完成 (短期MA=5, 长期MA=20)
+2025-12-24 13:38:41.258 [main] INFO  com.quant.strategy.MACrossStrategy - 策略 [MA交叉策略] 回测完成
+2025-12-24 13:38:41.260 [main] INFO  com.quant.strategy.MACrossStrategy -   期末组合价值: 348824.18
+2025-12-24 13:38:41.260 [main] INFO  com.quant.strategy.MACrossStrategy -   累计收益率: 248.82%
+2025-12-24 13:38:41.290 [main] INFO  com.quant.strategy.MACrossStrategy - 策略 [MA交叉策略] 信号生成完成 (短期MA=10, 长期MA=30)
+2025-12-24 13:38:41.290 [main] INFO  com.quant.strategy.MACrossStrategy - 策略 [MA交叉策略] 回测完成
+2025-12-24 13:38:41.291 [main] INFO  com.quant.strategy.MACrossStrategy -   期末组合价值: 414780.38
+2025-12-24 13:38:41.291 [main] INFO  com.quant.strategy.MACrossStrategy -   累计收益率: 314.78%
+2025-12-24 13:38:41.296 [main] INFO  com.quant.strategy.DualMAStrategy - 策略 [双均线趋势策略] 信号生成完成 (短期MA=5, 长期MA=20)
+2025-12-24 13:38:41.297 [main] INFO  com.quant.strategy.DualMAStrategy - 策略 [双均线趋势策略] 回测完成
+2025-12-24 13:38:41.297 [main] INFO  com.quant.strategy.DualMAStrategy -   期末组合价值: 122374.43
+2025-12-24 13:38:41.297 [main] INFO  com.quant.strategy.DualMAStrategy -   累计收益率: 22.37%
+2025-12-24 13:38:41.303 [main] INFO  com.quant.strategy.RSIStrategy - 策略 [RSI策略] 信号生成完成 (RSI14, 超卖=30.0, 超买=70.0)
+2025-12-24 13:38:41.304 [main] INFO  com.quant.strategy.RSIStrategy - 策略 [RSI策略] 回测完成
+2025-12-24 13:38:41.304 [main] INFO  com.quant.strategy.RSIStrategy -   期末组合价值: 268864.24
+2025-12-24 13:38:41.304 [main] INFO  com.quant.strategy.RSIStrategy -   累计收益率: 168.86%
+2025-12-24 13:38:41.309 [main] INFO  com.quant.strategy.MACrossStrategy - 策略 [MA交叉策略] 信号生成完成 (短期MA=5, 长期MA=20)
+2025-12-24 13:38:41.310 [main] INFO  com.quant.strategy.MACrossStrategy - 策略 [MA交叉策略] 回测完成
+2025-12-24 13:38:41.310 [main] INFO  com.quant.strategy.MACrossStrategy -   期末组合价值: 348824.18
+2025-12-24 13:38:41.310 [main] INFO  com.quant.strategy.MACrossStrategy -   累计收益率: 248.82%

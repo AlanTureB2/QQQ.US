@@ -1,0 +1,11 @@
+com\quant\loader\ExcelDataLoader$1.class
+com\quant\strategy\RSIStrategy.class
+com\quant\strategy\MACrossStrategy.class
+com\quant\model\StockData.class
+com\quant\statistics\PerformanceStatistics.class
+com\quant\strategy\AbstractStrategy.class
+com\quant\Main.class
+com\quant\strategy\DualMAStrategy.class
+com\quant\strategy\Strategy.class
+com\quant\indicator\TechnicalIndicators.class
+com\quant\loader\ExcelDataLoader.class
