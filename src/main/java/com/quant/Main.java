@@ -248,6 +248,142 @@ public class Main {
                     (data.getCumulativeReturn() - 1) * 100);
         }
         
+        // ========== 6. 年度对比分析：买入持有 vs 策略组合 ==========
+        System.out.println("\n" + "=".repeat(120));
+        System.out.println("【年度对比分析】买入持有 vs 策略组合（综合表格）");
+        System.out.println("=".repeat(120));
+        
+        // 先计算买入持有策略的完整回测数据
+        List<StockData> buyHoldData = copyDataList(dataList);
+        BuyAndHoldStrategy buyHoldStrategy = new BuyAndHoldStrategy();
+        buyHoldStrategy.execute(buyHoldData);
+        PerformanceStatistics buyHoldStats = new PerformanceStatistics(buyHoldData);
+        
+        // 获取年度统计数据
+        java.util.Map<Integer, PerformanceStatistics.YearlyStats> buyHoldYearly = buyHoldStats.getYearlyStats();
+        java.util.Map<Integer, PerformanceStatistics.YearlyStats> combinedYearly = combinedStats.getYearlyStats();
+        
+        // 收集所有年份
+        java.util.Set<Integer> allYears = new java.util.TreeSet<>();
+        allYears.addAll(buyHoldYearly.keySet());
+        allYears.addAll(combinedYearly.keySet());
+        
+        // 打印综合年度对比表格（收益率 + 回撤 + 夏普比率）
+        System.out.println();
+        System.out.println("-".repeat(120));
+        System.out.printf("%-6s │ %12s %12s %10s │ %12s %12s %10s │ %10s\n", 
+                "", "------- 收益率 -------", "", "", "------- 回撤 -------", "", "", "-- 夏普 --");
+        System.out.printf("%-6s │ %12s %12s %10s │ %12s %12s %10s │ %10s %10s\n", 
+                "年份", "买入持有", "策略组合", "超额", "买入持有", "策略组合", "改善", "买持", "组合");
+        System.out.println("-".repeat(120));
+        
+        double totalBuyHold = 1.0;
+        double totalCombined = 1.0;
+        double worstBhDd = 0;
+        double worstCbDd = 0;
+        double sumBhSharpe = 0;
+        double sumCbSharpe = 0;
+        int betterReturnYears = 0;
+        int betterDdYears = 0;
+        int betterSharpeYears = 0;
+        
+        for (Integer year : allYears) {
+            PerformanceStatistics.YearlyStats bhStats = buyHoldYearly.get(year);
+            PerformanceStatistics.YearlyStats cbStats = combinedYearly.get(year);
+            
+            // 收益率
+            double bhReturn = bhStats != null ? bhStats.getYearReturn() : 0;
+            double cbReturn = cbStats != null ? cbStats.getYearReturn() : 0;
+            double excessReturn = cbReturn - bhReturn;
+            
+            totalBuyHold *= (1 + bhReturn / 100);
+            totalCombined *= (1 + cbReturn / 100);
+            
+            // 回撤
+            double bhDd = bhStats != null ? bhStats.getMaxDrawdown() : 0;
+            double cbDd = cbStats != null ? cbStats.getMaxDrawdown() : 0;
+            double ddImprovement = bhDd - cbDd;  // 负数 - 负数，如果策略组合回撤更小则为负
+            
+            if (bhDd < worstBhDd) worstBhDd = bhDd;
+            if (cbDd < worstCbDd) worstCbDd = cbDd;
+            
+            // 夏普比率
+            double bhSharpe = bhStats != null ? bhStats.getSharpeRatio() : 0;
+            double cbSharpe = cbStats != null ? cbStats.getSharpeRatio() : 0;
+            
+            sumBhSharpe += bhSharpe;
+            sumCbSharpe += cbSharpe;
+            
+            // 统计胜出年份
+            if (cbReturn > bhReturn) betterReturnYears++;
+            if (cbDd > bhDd) betterDdYears++;  // 回撤是负数，更大表示回撤更小
+            if (cbSharpe > bhSharpe) betterSharpeYears++;
+            
+            // 格式化超额收益
+            String excessStr = excessReturn >= 0 ? 
+                    String.format("+%.1f%%", excessReturn) : 
+                    String.format("%.1f%%", excessReturn);
+            
+            // 格式化回撤改善（正数表示改善）
+            String ddImpStr = ddImprovement <= 0 ?  // 注意：ddImprovement <= 0 表示策略组合回撤更小
+                    String.format("+%.1f%%", -ddImprovement) : 
+                    String.format("%.1f%%", -ddImprovement);
+            
+            // 标记突出表现
+            String returnMark = excessReturn > 0 ? "↑" : (excessReturn < -10 ? "↓" : " ");
+            String ddMark = cbDd > bhDd ? "✓" : " ";  // 策略组合回撤更小
+            String sharpeMark = cbSharpe > bhSharpe ? "+" : " ";
+            
+            System.out.printf("%-6d │ %11.2f%% %11.2f%% %9s%s │ %11.2f%% %11.2f%% %9s%s │ %9.2f %9.2f%s\n",
+                    year, 
+                    bhReturn, cbReturn, excessStr, returnMark,
+                    bhDd, cbDd, ddImpStr, ddMark,
+                    bhSharpe, cbSharpe, sharpeMark);
+        }
+        
+        // 汇总行
+        System.out.println("-".repeat(120));
+        int totalYears = allYears.size();
+        double avgBhSharpe = totalYears > 0 ? sumBhSharpe / totalYears : 0;
+        double avgCbSharpe = totalYears > 0 ? sumCbSharpe / totalYears : 0;
+        
+        System.out.printf("%-6s │ %11.2f%% %11.2f%% %9.1f%% │ %11.2f%% %11.2f%% %9.1f%% │ %9.2f %9.2f\n",
+                "累计/均",
+                (totalBuyHold - 1) * 100, (totalCombined - 1) * 100, (totalCombined - totalBuyHold) * 100,
+                worstBhDd, worstCbDd, -(worstBhDd - worstCbDd),
+                avgBhSharpe, avgCbSharpe);
+        System.out.println("-".repeat(120));
+        
+        // 胜率统计
+        System.out.println();
+        System.out.printf("【胜率统计】策略组合 vs 买入持有 (共 %d 年)\n", totalYears);
+        System.out.println("-".repeat(60));
+        System.out.printf("  收益率胜出: %2d/%d 年 (%5.1f%%)  %s\n", 
+                betterReturnYears, totalYears, 100.0 * betterReturnYears / totalYears,
+                betterReturnYears > totalYears * 0.5 ? "✓ 策略占优" : "✗ 买持占优");
+        System.out.printf("  回撤控制:   %2d/%d 年 (%5.1f%%)  %s\n", 
+                betterDdYears, totalYears, 100.0 * betterDdYears / totalYears,
+                betterDdYears > totalYears * 0.5 ? "✓ 策略占优" : "✗ 买持占优");
+        System.out.printf("  夏普比率:   %2d/%d 年 (%5.1f%%)  %s\n", 
+                betterSharpeYears, totalYears, 100.0 * betterSharpeYears / totalYears,
+                betterSharpeYears > totalYears * 0.5 ? "✓ 策略占优" : "✗ 买持占优");
+        System.out.println();
+        
+        // 分析结论
+        System.out.println("【分析结论】");
+        System.out.println("-".repeat(60));
+        if (betterDdYears > totalYears * 0.6) {
+            System.out.println("  ✓ 策略组合在大多数年份有效控制了回撤风险");
+        }
+        if (betterSharpeYears > totalYears * 0.5) {
+            System.out.println("  ✓ 策略组合在风险调整后收益（夏普比率）上表现更优");
+        }
+        if (betterReturnYears < totalYears * 0.5) {
+            System.out.println("  ⚠ 策略组合牺牲了部分收益来换取更低的风险");
+            System.out.println("    → 这是风险控制的正常代价，长期来看可提高投资体验");
+        }
+        System.out.println();
+        
         // 开发注意事项
         System.out.println("\n" + "=".repeat(60));
         System.out.println("【开发注意事项】");

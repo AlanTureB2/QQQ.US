@@ -4,8 +4,11 @@ import com.quant.model.StockData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 绩效统计模块
@@ -375,6 +378,167 @@ public class PerformanceStatistics {
         sb.append(String.format("总交易次数: %d\n", getTotalTrades()));
         
         return sb.toString();
+    }
+    
+    // ================== 年度统计相关方法 ==================
+    
+    /**
+     * 年度统计数据类
+     */
+    public static class YearlyStats {
+        private int year;
+        private double yearReturn;        // 年度收益率
+        private double maxDrawdown;       // 年度最大回撤
+        private double sharpeRatio;       // 年度夏普比率
+        private double volatility;        // 年度波动率
+        private int tradingDays;          // 交易日数
+        private double startValue;        // 年初值
+        private double endValue;          // 年末值
+        
+        public YearlyStats(int year) {
+            this.year = year;
+        }
+        
+        // Getters and Setters
+        public int getYear() { return year; }
+        public double getYearReturn() { return yearReturn; }
+        public void setYearReturn(double yearReturn) { this.yearReturn = yearReturn; }
+        public double getMaxDrawdown() { return maxDrawdown; }
+        public void setMaxDrawdown(double maxDrawdown) { this.maxDrawdown = maxDrawdown; }
+        public double getSharpeRatio() { return sharpeRatio; }
+        public void setSharpeRatio(double sharpeRatio) { this.sharpeRatio = sharpeRatio; }
+        public double getVolatility() { return volatility; }
+        public void setVolatility(double volatility) { this.volatility = volatility; }
+        public int getTradingDays() { return tradingDays; }
+        public void setTradingDays(int tradingDays) { this.tradingDays = tradingDays; }
+        public double getStartValue() { return startValue; }
+        public void setStartValue(double startValue) { this.startValue = startValue; }
+        public double getEndValue() { return endValue; }
+        public void setEndValue(double endValue) { this.endValue = endValue; }
+    }
+    
+    /**
+     * 计算年度统计数据
+     * 
+     * @return 按年份排序的年度统计Map
+     */
+    public Map<Integer, YearlyStats> calculateYearlyStats() {
+        Map<Integer, YearlyStats> yearlyStatsMap = new LinkedHashMap<>();
+        Map<Integer, List<StockData>> yearDataMap = new LinkedHashMap<>();
+        
+        // 按年份分组数据
+        for (StockData data : dataList) {
+            LocalDate date = data.getDate();
+            if (date == null) continue;
+            
+            int year = date.getYear();
+            yearDataMap.computeIfAbsent(year, k -> new ArrayList<>()).add(data);
+        }
+        
+        // 计算每年的统计数据
+        for (Map.Entry<Integer, List<StockData>> entry : yearDataMap.entrySet()) {
+            int year = entry.getKey();
+            List<StockData> yearData = entry.getValue();
+            
+            if (yearData.isEmpty()) continue;
+            
+            YearlyStats stats = new YearlyStats(year);
+            stats.setTradingDays(yearData.size());
+            
+            // 年初和年末累计收益值
+            double startCumReturn = yearData.get(0).getCumulativeReturn();
+            double endCumReturn = yearData.get(yearData.size() - 1).getCumulativeReturn();
+            
+            stats.setStartValue(startCumReturn);
+            stats.setEndValue(endCumReturn);
+            
+            // 年度收益率 = (年末累计收益 / 年初累计收益 - 1) * 100
+            double yearReturn = (endCumReturn / startCumReturn - 1) * 100;
+            stats.setYearReturn(yearReturn);
+            
+            // 计算年度最大回撤
+            double peak = 0;
+            double maxDd = 0;
+            for (StockData data : yearData) {
+                double value = data.getCumulativeReturn();
+                if (value > peak) {
+                    peak = value;
+                }
+                double drawdown = (value - peak) / peak;
+                if (drawdown < maxDd) {
+                    maxDd = drawdown;
+                }
+            }
+            stats.setMaxDrawdown(maxDd * 100);
+            
+            // 计算年度波动率和夏普比率
+            List<Double> dailyReturns = new ArrayList<>();
+            for (StockData data : yearData) {
+                double sr = data.getStrategyReturn();
+                if (sr != 0 || data.getPosition() == 1) {
+                    dailyReturns.add(sr);
+                }
+            }
+            
+            if (dailyReturns.size() > 1) {
+                // 计算平均日收益率
+                double mean = dailyReturns.stream().mapToDouble(Double::doubleValue).average().orElse(0);
+                
+                // 计算标准差
+                double sumSquares = 0;
+                for (double r : dailyReturns) {
+                    sumSquares += Math.pow(r - mean, 2);
+                }
+                double dailyVol = Math.sqrt(sumSquares / (dailyReturns.size() - 1));
+                
+                // 年化波动率
+                double annualizedVol = dailyVol * Math.sqrt(TRADING_DAYS_PER_YEAR) * 100;
+                stats.setVolatility(annualizedVol);
+                
+                // 年化夏普比率
+                if (annualizedVol > 0) {
+                    double annualizedReturn = yearReturn / 100;
+                    double sharpe = (annualizedReturn - RISK_FREE_RATE) / (annualizedVol / 100);
+                    stats.setSharpeRatio(sharpe);
+                }
+            }
+            
+            yearlyStatsMap.put(year, stats);
+        }
+        
+        return yearlyStatsMap;
+    }
+    
+    /**
+     * 打印年度统计对比表格
+     * 
+     * @param strategyName 策略名称
+     */
+    public void printYearlyStats(String strategyName) {
+        Map<Integer, YearlyStats> yearlyStats = calculateYearlyStats();
+        
+        System.out.println("\n【" + strategyName + " - 年度统计】");
+        System.out.println("-".repeat(70));
+        System.out.printf("%-6s %12s %12s %12s %12s\n", 
+                "年份", "年度收益率", "最大回撤", "夏普比率", "波动率");
+        System.out.println("-".repeat(70));
+        
+        for (YearlyStats stats : yearlyStats.values()) {
+            System.out.printf("%-6d %11.2f%% %11.2f%% %12.2f %11.2f%%\n",
+                    stats.getYear(),
+                    stats.getYearReturn(),
+                    stats.getMaxDrawdown(),
+                    stats.getSharpeRatio(),
+                    stats.getVolatility());
+        }
+        System.out.println("-".repeat(70));
+    }
+    
+    /**
+     * 获取年度统计数据（供外部调用）
+     */
+    public Map<Integer, YearlyStats> getYearlyStats() {
+        return calculateYearlyStats();
     }
 }
 

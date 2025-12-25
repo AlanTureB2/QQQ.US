@@ -10,3 +10,7 @@
 /dataSources.local.xml
 *.idea
 *.class
+target/
+build/
+*.jar
+*.war

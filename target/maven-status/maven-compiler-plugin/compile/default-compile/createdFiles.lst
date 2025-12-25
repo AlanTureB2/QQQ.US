@@ -7,6 +7,7 @@ com\quant\strategy\DualMAStrategy.class
 com\quant\strategy\Strategy.class
 com\quant\loader\ExcelDataLoader.class
 com\quant\loader\ExcelDataLoader$1.class
+com\quant\statistics\PerformanceStatistics$YearlyStats.class
 com\quant\model\StockData.class
 com\quant\statistics\PerformanceStatistics.class
 com\quant\strategy\AbstractStrategy.class
