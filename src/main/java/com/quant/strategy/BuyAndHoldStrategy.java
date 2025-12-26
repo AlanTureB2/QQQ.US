@@ -41,3 +41,4 @@ public class BuyAndHoldStrategy extends AbstractStrategy {
     }
 }
 
+

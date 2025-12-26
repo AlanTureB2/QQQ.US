@@ -2,6 +2,8 @@ com\quant\strategy\CombinedStrategy.class
 com\quant\strategy\RSIStrategy.class
 com\quant\strategy\VolatilityTargetStrategy.class
 com\quant\strategy\MACrossStrategy.class
+com\quant\optimizer\MAParameterOptimizer$OptimizationResult.class
+com\quant\optimizer\MAParameterOptimizer.class
 com\quant\strategy\TrendFollowingStrategy.class
 com\quant\strategy\DualMAStrategy.class
 com\quant\strategy\Strategy.class
