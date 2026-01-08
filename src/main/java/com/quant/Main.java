@@ -1,5 +1,6 @@
 package com.quant;
 
+import com.quant.chart.CandlestickChartViewer;
 import com.quant.indicator.TechnicalIndicators;
 import com.quant.loader.ExcelDataLoader;
 import com.quant.model.StockData;
@@ -78,6 +79,10 @@ public class Main {
         System.out.println("  ✓ MACD (12, 26, 9)");
         System.out.println("  ✓ RSI (14)");
         System.out.println("  ✓ 布林带 (20, 2)");
+        
+        // ========== 2.5 显示K线图 ==========
+        System.out.println("\n【步骤2.5】展示日K线图...");
+        showCandlestickChart(dataList);
         
         // ========== 3. 执行多个策略并比较 ==========
         System.out.println("\n【步骤3】执行策略回测...\n");
@@ -477,5 +482,27 @@ public class Main {
                           " ~ " + dataList.get(dataList.size() - 1).getDate());
         
         return dataList;
+    }
+    
+    /**
+     * 显示K线图
+     */
+    private static void showCandlestickChart(List<StockData> dataList) {
+        if (dataList == null || dataList.isEmpty()) {
+            System.out.println("  [警告] 数据为空，无法显示K线图");
+            return;
+        }
+        
+        // 获取股票代码
+        String symbol = "QQQ";
+        if (dataList.get(0).getSymbol() != null && !dataList.get(0).getSymbol().isEmpty()) {
+            symbol = dataList.get(0).getSymbol();
+        }
+        
+        System.out.println("  ✓ 正在打开K线图窗口...");
+        System.out.println("  提示: 鼠标滚轮可缩放，拖动可平移");
+        
+        // 显示K线图
+        CandlestickChartViewer.showChart(dataList, symbol);
     }
 }

@@ -7,6 +7,7 @@ D:\workSpace\QQQ.US\src\main\java\com\quant\strategy\VolatilityTargetStrategy.ja
 D:\workSpace\QQQ.US\src\main\java\com\quant\loader\ExcelDataLoader.java
 D:\workSpace\QQQ.US\src\main\java\com\quant\strategy\DualMAStrategy.java
 D:\workSpace\QQQ.US\src\main\java\com\quant\strategy\BuyAndHoldStrategy.java
+D:\workSpace\QQQ.US\src\main\java\com\quant\chart\CandlestickChartViewer.java
 D:\workSpace\QQQ.US\src\main\java\com\quant\indicator\TechnicalIndicators.java
 D:\workSpace\QQQ.US\src\main\java\com\quant\strategy\RSIStrategy.java
 D:\workSpace\QQQ.US\src\main\java\com\quant\Main.java

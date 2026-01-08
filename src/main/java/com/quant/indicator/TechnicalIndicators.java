@@ -3,18 +3,34 @@ package com.quant.indicator;
 import com.quant.model.StockData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.ta4j.core.BarSeries;
+import org.ta4j.core.BaseBarSeriesBuilder;
+import org.ta4j.core.indicators.*;
+import org.ta4j.core.indicators.bollinger.BollingerBandWidthIndicator;
+import org.ta4j.core.indicators.bollinger.BollingerBandsLowerIndicator;
+import org.ta4j.core.indicators.bollinger.BollingerBandsMiddleIndicator;
+import org.ta4j.core.indicators.bollinger.BollingerBandsUpperIndicator;
+import org.ta4j.core.indicators.helpers.ClosePriceIndicator;
+import org.ta4j.core.indicators.statistics.StandardDeviationIndicator;
+import org.ta4j.core.num.DecimalNum;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
- * 技术指标计算器
- * 负责计算各种技术指标：MA、EMA、MACD、RSI、布林带等
+ * 技术指标计算器 (基于 ta4j 库)
+ * 负责计算各种技术指标：MA、EMA、MACD、RSI、布林带、ATR等
+ * 
+ * 使用 ta4j 库提供的经过验证的指标计算方法，确保计算准确性
  */
 public class TechnicalIndicators {
     
     private static final Logger logger = LoggerFactory.getLogger(TechnicalIndicators.class);
     
     private final List<StockData> dataList;
+    private final BarSeries barSeries;
+    private final ClosePriceIndicator closePrice;
     
     /**
      * 构造函数
@@ -26,10 +42,43 @@ public class TechnicalIndicators {
             throw new IllegalArgumentException("数据列表不能为空");
         }
         this.dataList = dataList;
+        
+        // 构建 ta4j BarSeries
+        this.barSeries = buildBarSeries(dataList);
+        this.closePrice = new ClosePriceIndicator(barSeries);
+        
+        logger.debug("初始化 TechnicalIndicators，数据量: {}", dataList.size());
     }
     
     /**
-     * 计算简单移动平均线 (SMA)
+     * 将 StockData 列表转换为 ta4j BarSeries
+     */
+    private BarSeries buildBarSeries(List<StockData> dataList) {
+        BarSeries series = new BaseBarSeriesBuilder()
+                .withName("QQQ")
+                .withNumTypeOf(DecimalNum.class)
+                .build();
+        
+        for (StockData data : dataList) {
+            ZonedDateTime dateTime = data.getDate() != null 
+                    ? data.getDate().atStartOfDay(ZoneId.systemDefault())
+                    : ZonedDateTime.now();
+            
+            series.addBar(
+                    dateTime,
+                    data.getOpen(),
+                    data.getHigh(),
+                    data.getLow(),
+                    data.getClose(),
+                    data.getVolume()
+            );
+        }
+        
+        return series;
+    }
+    
+    /**
+     * 计算简单移动平均线 (SMA) - 使用 ta4j
      * 
      * @param period 周期
      * @return 当前对象（链式调用）
@@ -37,61 +86,47 @@ public class TechnicalIndicators {
     public TechnicalIndicators calculateMA(int period) {
         String indicatorName = "MA" + period;
         
+        SMAIndicator sma = new SMAIndicator(closePrice, period);
+        
         for (int i = 0; i < dataList.size(); i++) {
             if (i < period - 1) {
                 dataList.get(i).setIndicator(indicatorName, null);
             } else {
-                double sum = 0;
-                for (int j = i - period + 1; j <= i; j++) {
-                    sum += dataList.get(j).getClose();
-                }
-                dataList.get(i).setIndicator(indicatorName, sum / period);
+                double value = sma.getValue(i).doubleValue();
+                dataList.get(i).setIndicator(indicatorName, value);
             }
         }
         
-        logger.debug("计算完成: {}", indicatorName);
+        logger.debug("计算完成 (ta4j): {}", indicatorName);
         return this;
     }
     
     /**
-     * 计算指数移动平均线 (EMA)
+     * 计算指数移动平均线 (EMA) - 使用 ta4j
      * 
      * @param period 周期
      * @return 当前对象（链式调用）
      */
     public TechnicalIndicators calculateEMA(int period) {
         String indicatorName = "EMA" + period;
-        double multiplier = 2.0 / (period + 1);
         
-        // 第一个值使用SMA
-        double sum = 0;
-        for (int i = 0; i < period && i < dataList.size(); i++) {
-            sum += dataList.get(i).getClose();
-        }
+        EMAIndicator ema = new EMAIndicator(closePrice, period);
         
-        if (dataList.size() >= period) {
-            double ema = sum / period;
-            dataList.get(period - 1).setIndicator(indicatorName, ema);
-            
-            // 后续使用EMA公式
-            for (int i = period; i < dataList.size(); i++) {
-                double prevEma = dataList.get(i - 1).getIndicator(indicatorName);
-                ema = (dataList.get(i).getClose() - prevEma) * multiplier + prevEma;
-                dataList.get(i).setIndicator(indicatorName, ema);
+        for (int i = 0; i < dataList.size(); i++) {
+            if (i < period - 1) {
+                dataList.get(i).setIndicator(indicatorName, null);
+            } else {
+                double value = ema.getValue(i).doubleValue();
+                dataList.get(i).setIndicator(indicatorName, value);
             }
         }
         
-        // 前面的值设为null
-        for (int i = 0; i < period - 1 && i < dataList.size(); i++) {
-            dataList.get(i).setIndicator(indicatorName, null);
-        }
-        
-        logger.debug("计算完成: {}", indicatorName);
+        logger.debug("计算完成 (ta4j): {}", indicatorName);
         return this;
     }
     
     /**
-     * 计算MACD指标
+     * 计算MACD指标 - 使用 ta4j
      * 
      * @param fastPeriod 快线周期 (默认12)
      * @param slowPeriod 慢线周期 (默认26)
@@ -99,64 +134,33 @@ public class TechnicalIndicators {
      * @return 当前对象（链式调用）
      */
     public TechnicalIndicators calculateMACD(int fastPeriod, int slowPeriod, int signalPeriod) {
-        // 先计算快慢EMA
+        MACDIndicator macd = new MACDIndicator(closePrice, fastPeriod, slowPeriod);
+        EMAIndicator signal = new EMAIndicator(macd, signalPeriod);
+        
+        int startIndex = slowPeriod - 1;
+        
+        for (int i = 0; i < dataList.size(); i++) {
+            if (i < startIndex) {
+                dataList.get(i).setIndicator("MACD", null);
+                dataList.get(i).setIndicator("MACD_SIGNAL", null);
+                dataList.get(i).setIndicator("MACD_HIST", null);
+            } else {
+                double macdValue = macd.getValue(i).doubleValue();
+                dataList.get(i).setIndicator("MACD", macdValue);
+                
+                if (i >= startIndex + signalPeriod - 1) {
+                    double signalValue = signal.getValue(i).doubleValue();
+                    dataList.get(i).setIndicator("MACD_SIGNAL", signalValue);
+                    dataList.get(i).setIndicator("MACD_HIST", macdValue - signalValue);
+                }
+            }
+        }
+        
+        // 同时计算 EMA 指标（兼容旧代码）
         calculateEMA(fastPeriod);
         calculateEMA(slowPeriod);
         
-        String fastEmaName = "EMA" + fastPeriod;
-        String slowEmaName = "EMA" + slowPeriod;
-        
-        // 计算MACD线 (DIF)
-        for (int i = 0; i < dataList.size(); i++) {
-            Double fastEma = dataList.get(i).getIndicator(fastEmaName);
-            Double slowEma = dataList.get(i).getIndicator(slowEmaName);
-            
-            if (fastEma != null && slowEma != null) {
-                dataList.get(i).setIndicator("MACD", fastEma - slowEma);
-            }
-        }
-        
-        // 计算信号线 (DEA) - MACD的EMA
-        double multiplier = 2.0 / (signalPeriod + 1);
-        int startIndex = slowPeriod - 1;
-        
-        if (dataList.size() > startIndex + signalPeriod - 1) {
-            // 计算初始值
-            double sum = 0;
-            for (int i = startIndex; i < startIndex + signalPeriod; i++) {
-                Double macd = dataList.get(i).getIndicator("MACD");
-                if (macd != null) {
-                    sum += macd;
-                }
-            }
-            
-            double signal = sum / signalPeriod;
-            int signalStartIndex = startIndex + signalPeriod - 1;
-            dataList.get(signalStartIndex).setIndicator("MACD_SIGNAL", signal);
-            
-            // 计算后续信号线
-            for (int i = signalStartIndex + 1; i < dataList.size(); i++) {
-                Double macd = dataList.get(i).getIndicator("MACD");
-                Double prevSignal = dataList.get(i - 1).getIndicator("MACD_SIGNAL");
-                
-                if (macd != null && prevSignal != null) {
-                    signal = (macd - prevSignal) * multiplier + prevSignal;
-                    dataList.get(i).setIndicator("MACD_SIGNAL", signal);
-                }
-            }
-        }
-        
-        // 计算MACD柱状图 (MACD Histogram)
-        for (int i = 0; i < dataList.size(); i++) {
-            Double macd = dataList.get(i).getIndicator("MACD");
-            Double signal = dataList.get(i).getIndicator("MACD_SIGNAL");
-            
-            if (macd != null && signal != null) {
-                dataList.get(i).setIndicator("MACD_HIST", macd - signal);
-            }
-        }
-        
-        logger.debug("计算完成: MACD({}, {}, {})", fastPeriod, slowPeriod, signalPeriod);
+        logger.debug("计算完成 (ta4j): MACD({}, {}, {})", fastPeriod, slowPeriod, signalPeriod);
         return this;
     }
     
@@ -170,7 +174,7 @@ public class TechnicalIndicators {
     }
     
     /**
-     * 计算RSI指标
+     * 计算RSI指标 - 使用 ta4j
      * 
      * @param period 周期 (默认14)
      * @return 当前对象（链式调用）
@@ -178,35 +182,18 @@ public class TechnicalIndicators {
     public TechnicalIndicators calculateRSI(int period) {
         String indicatorName = "RSI" + period;
         
-        // 计算价格变动
-        double[] changes = new double[dataList.size()];
-        for (int i = 1; i < dataList.size(); i++) {
-            changes[i] = dataList.get(i).getClose() - dataList.get(i - 1).getClose();
-        }
+        RSIIndicator rsi = new RSIIndicator(closePrice, period);
         
-        // 计算平均涨跌幅
-        for (int i = period; i < dataList.size(); i++) {
-            double avgGain = 0;
-            double avgLoss = 0;
-            
-            for (int j = i - period + 1; j <= i; j++) {
-                if (changes[j] > 0) {
-                    avgGain += changes[j];
-                } else {
-                    avgLoss += Math.abs(changes[j]);
-                }
+        for (int i = 0; i < dataList.size(); i++) {
+            if (i < period) {
+                dataList.get(i).setIndicator(indicatorName, null);
+            } else {
+                double value = rsi.getValue(i).doubleValue();
+                dataList.get(i).setIndicator(indicatorName, value);
             }
-            
-            avgGain /= period;
-            avgLoss /= period;
-            
-            double rs = avgLoss == 0 ? 100 : avgGain / avgLoss;
-            double rsi = 100 - (100 / (1 + rs));
-            
-            dataList.get(i).setIndicator(indicatorName, rsi);
         }
         
-        logger.debug("计算完成: {}", indicatorName);
+        logger.debug("计算完成 (ta4j): {}", indicatorName);
         return this;
     }
     
@@ -220,37 +207,40 @@ public class TechnicalIndicators {
     }
     
     /**
-     * 计算布林带
+     * 计算布林带 - 使用 ta4j
      * 
      * @param period 周期 (默认20)
      * @param numStd 标准差倍数 (默认2)
      * @return 当前对象（链式调用）
      */
     public TechnicalIndicators calculateBollingerBands(int period, double numStd) {
-        // 先计算MA
-        calculateMA(period);
-        String maName = "MA" + period;
+        SMAIndicator sma = new SMAIndicator(closePrice, period);
+        StandardDeviationIndicator sd = new StandardDeviationIndicator(closePrice, period);
         
-        for (int i = period - 1; i < dataList.size(); i++) {
-            Double ma = dataList.get(i).getIndicator(maName);
-            if (ma == null) continue;
-            
-            // 计算标准差
-            double sumSquares = 0;
-            for (int j = i - period + 1; j <= i; j++) {
-                double diff = dataList.get(j).getClose() - ma;
-                sumSquares += diff * diff;
+        BollingerBandsMiddleIndicator bbMiddle = new BollingerBandsMiddleIndicator(sma);
+        BollingerBandsUpperIndicator bbUpper = new BollingerBandsUpperIndicator(bbMiddle, sd, DecimalNum.valueOf(numStd));
+        BollingerBandsLowerIndicator bbLower = new BollingerBandsLowerIndicator(bbMiddle, sd, DecimalNum.valueOf(numStd));
+        BollingerBandWidthIndicator bbWidth = new BollingerBandWidthIndicator(bbUpper, bbMiddle, bbLower);
+        
+        for (int i = 0; i < dataList.size(); i++) {
+            if (i < period - 1) {
+                dataList.get(i).setIndicator("BB_MIDDLE", null);
+                dataList.get(i).setIndicator("BB_UPPER", null);
+                dataList.get(i).setIndicator("BB_LOWER", null);
+                dataList.get(i).setIndicator("BB_WIDTH", null);
+            } else {
+                dataList.get(i).setIndicator("BB_MIDDLE", bbMiddle.getValue(i).doubleValue());
+                dataList.get(i).setIndicator("BB_UPPER", bbUpper.getValue(i).doubleValue());
+                dataList.get(i).setIndicator("BB_LOWER", bbLower.getValue(i).doubleValue());
+                // BB_WIDTH 在 ta4j 中是百分比形式
+                dataList.get(i).setIndicator("BB_WIDTH", bbWidth.getValue(i).doubleValue() / 100);
             }
-            double std = Math.sqrt(sumSquares / period);
-            
-            // 设置布林带值
-            dataList.get(i).setIndicator("BB_MIDDLE", ma);
-            dataList.get(i).setIndicator("BB_UPPER", ma + numStd * std);
-            dataList.get(i).setIndicator("BB_LOWER", ma - numStd * std);
-            dataList.get(i).setIndicator("BB_WIDTH", (2 * numStd * std) / ma);
         }
         
-        logger.debug("计算完成: Bollinger Bands({}, {})", period, numStd);
+        // 同时计算 MA（兼容旧代码）
+        calculateMA(period);
+        
+        logger.debug("计算完成 (ta4j): Bollinger Bands({}, {})", period, numStd);
         return this;
     }
     
@@ -264,7 +254,7 @@ public class TechnicalIndicators {
     }
     
     /**
-     * 计算ATR (平均真实波幅)
+     * 计算ATR (平均真实波幅) - 使用 ta4j
      * 
      * @param period 周期 (默认14)
      * @return 当前对象（链式调用）
@@ -272,29 +262,18 @@ public class TechnicalIndicators {
     public TechnicalIndicators calculateATR(int period) {
         String indicatorName = "ATR" + period;
         
-        // 计算True Range
-        double[] tr = new double[dataList.size()];
-        for (int i = 1; i < dataList.size(); i++) {
-            StockData curr = dataList.get(i);
-            StockData prev = dataList.get(i - 1);
-            
-            double tr1 = curr.getHigh() - curr.getLow();
-            double tr2 = Math.abs(curr.getHigh() - prev.getClose());
-            double tr3 = Math.abs(curr.getLow() - prev.getClose());
-            
-            tr[i] = Math.max(tr1, Math.max(tr2, tr3));
-        }
+        ATRIndicator atr = new ATRIndicator(barSeries, period);
         
-        // 计算ATR (SMA of TR)
-        for (int i = period; i < dataList.size(); i++) {
-            double sum = 0;
-            for (int j = i - period + 1; j <= i; j++) {
-                sum += tr[j];
+        for (int i = 0; i < dataList.size(); i++) {
+            if (i < period) {
+                dataList.get(i).setIndicator(indicatorName, null);
+            } else {
+                double value = atr.getValue(i).doubleValue();
+                dataList.get(i).setIndicator(indicatorName, value);
             }
-            dataList.get(i).setIndicator(indicatorName, sum / period);
         }
         
-        logger.debug("计算完成: {}", indicatorName);
+        logger.debug("计算完成 (ta4j): {}", indicatorName);
         return this;
     }
     
@@ -372,6 +351,55 @@ public class TechnicalIndicators {
     }
     
     /**
+     * 计算 ADX 指标 (Average Directional Index) - ta4j 新增
+     * 
+     * @param period 周期（默认14）
+     * @return 当前对象（链式调用）
+     */
+    public TechnicalIndicators calculateADX(int period) {
+        String indicatorName = "ADX" + period;
+        
+        org.ta4j.core.indicators.adx.ADXIndicator adx = 
+                new org.ta4j.core.indicators.adx.ADXIndicator(barSeries, period);
+        
+        for (int i = 0; i < dataList.size(); i++) {
+            if (i < period * 2) {
+                dataList.get(i).setIndicator(indicatorName, null);
+            } else {
+                double value = adx.getValue(i).doubleValue();
+                dataList.get(i).setIndicator(indicatorName, value);
+            }
+        }
+        
+        logger.debug("计算完成 (ta4j): {}", indicatorName);
+        return this;
+    }
+    
+    /**
+     * 计算 WMA (加权移动平均) - ta4j 新增
+     * 
+     * @param period 周期
+     * @return 当前对象（链式调用）
+     */
+    public TechnicalIndicators calculateWMA(int period) {
+        String indicatorName = "WMA" + period;
+        
+        WMAIndicator wma = new WMAIndicator(closePrice, period);
+        
+        for (int i = 0; i < dataList.size(); i++) {
+            if (i < period - 1) {
+                dataList.get(i).setIndicator(indicatorName, null);
+            } else {
+                double value = wma.getValue(i).doubleValue();
+                dataList.get(i).setIndicator(indicatorName, value);
+            }
+        }
+        
+        logger.debug("计算完成 (ta4j): {}", indicatorName);
+        return this;
+    }
+    
+    /**
      * 计算所有基础指标
      * 
      * @return 当前对象（链式调用）
@@ -388,10 +416,11 @@ public class TechnicalIndicators {
         calculateMACD();
         calculateRSI();
         calculateBollingerBands();
+        calculateATR(14);
         calculateReturns();
         calculateHistoricalVolatility(20);  // 波动率目标策略使用
         
-        logger.info("✓ 所有基础指标计算完成");
+        logger.info("✓ 所有基础指标计算完成 (使用 ta4j)");
         return this;
     }
     
@@ -403,5 +432,13 @@ public class TechnicalIndicators {
     public List<StockData> getDataList() {
         return dataList;
     }
+    
+    /**
+     * 获取 ta4j BarSeries（供高级用途）
+     * 
+     * @return BarSeries
+     */
+    public BarSeries getBarSeries() {
+        return barSeries;
+    }
 }
-

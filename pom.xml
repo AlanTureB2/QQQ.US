@@ -63,12 +63,26 @@
             <version>2.22.0</version>
         </dependency>
 
+        <!-- Ta4j - 技术分析库 -->
+        <dependency>
+            <groupId>org.ta4j</groupId>
+            <artifactId>ta4j-core</artifactId>
+            <version>0.16</version>
+        </dependency>
+
         <!-- JUnit 5 - 测试 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.10.1</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- JFreeChart - K线图绘制 -->
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.5.4</version>
         </dependency>
     </dependencies>
 
